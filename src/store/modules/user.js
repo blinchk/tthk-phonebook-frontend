@@ -18,7 +18,7 @@ const getters = {
 const actions = {
   authUser ({ rootState, commit }, payload) {
     return new Promise((resolve, reject) => {
-      axios.get('http://localhost:8080/auth/login', {
+      axios.get(rootState.serverAddress + '/auth/login', {
         auth: {
           username: payload.username,
           password: payload.password
