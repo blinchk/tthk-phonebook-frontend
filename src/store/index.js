@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: () => ({
-    serverAddress: 'http://localhost:8080'
+    serverAddress: 'https://phonebook-api.laus.me'
   }),
   getters: {
   },
