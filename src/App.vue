@@ -45,6 +45,7 @@
 
 <script>
 import AlertNotification from "./components/AlertNotification";
+import {mapGetters, mapMutations} from 'vuex';
 
 export default {
 
@@ -68,7 +69,19 @@ export default {
         title: 'Add contact',
         to: '/add',
         icon: 'mdi-plus'
-      }]
-  })
+      }
+    ]
+  }),
+  computed: {
+    ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue'])
+  },
+  mounted() {
+    if (!this.accessToken) {
+      this.getAccessToken();
+    }
+  },
+  methods: {
+    ...mapMutations('user', ['getAccessToken'])
+  },
 };
 </script>

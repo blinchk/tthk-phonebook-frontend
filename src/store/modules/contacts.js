@@ -15,6 +15,10 @@ const actions = {
         commit('setContacts', response.data);
         resolve(response);
       }).catch((error) => {
+        commit('createNewAlert', {
+          color: 'error',
+          text: error.response.data
+        });
         reject(error);
       });
     });
@@ -46,6 +50,71 @@ const actions = {
           }, {root: true});
         }
         reject(error);
+      });
+    });
+  },
+  deleteContact({rootState, rootGetters, commit}, payload) {
+    return new Promise((resolve, reject) => {
+      axios.delete(rootState.serverAddress + /contact/ + payload.id, {
+        headers: {
+          Authorization: rootGetters["user/accessTokenHeaderValue"]
+        }
+      }).then((response) => {
+        if (response.status === 200) {
+          commit('createNewAlert', {
+            color: 'success',
+            text: 'Contact deleted successfully!'
+          }, {root: true});
+          resolve();
+        }
+      }).catch((error) => {
+        if (error.response.status === 500) {
+          commit('createNewAlert', {
+            color: 'error',
+            text: 'Internal server error'
+          }, {root: true});
+        } else {
+          commit('createNewAlert', {
+            color: 'error',
+            text: error.response.status
+          }, {root: true});
+        }
+        reject();
+      });
+    });
+  },
+  editContact({rootState, rootGetters, commit}, payload) {
+    return new Promise((resolve, reject) => {
+      axios.post(rootState.serverAddress + '/contact/' + payload.id, {
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        phone: payload.phone,
+        email: payload.email
+      }, {
+        headers: {
+          Authorization: rootGetters["user/accessTokenHeaderValue"]
+        }
+      }).then((response) => {
+        if (response.status === 200) {
+          commit('createNewAlert', {
+            color: 'success',
+            text: 'Contact has been changed'
+          }, {root: true});
+          resolve();
+        }
+      }).catch((error) => {
+        if (error.response.status === 500) {
+          commit('createNewAlert', {
+            color: 'error',
+            text: "Internal server error"
+          }, {root: true});
+        } else {
+          commit('createNewAlert', {
+            color: 'error',
+            text: error.response.data
+          }, {root: true});
+        }
+        reject();
       });
     });
   }
