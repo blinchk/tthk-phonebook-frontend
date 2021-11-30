@@ -1,9 +1,17 @@
 <template>
   <v-app>
-    <v-navigation-drawer app clipped v-model="drawerOpen">
+    <v-navigation-drawer
+      v-model="drawerOpen"
+      app
+      clipped
+    >
       <v-list>
         <v-list-item-group>
-          <v-list-item :to="item.to" v-for="(item, key) in nav" :key="key">
+          <v-list-item
+            v-for="(item, key) in nav"
+            :key="key"
+            :to="item.to"
+          >
             <v-list-item-icon>
               <v-icon>
                 {{ item.icon }}
@@ -22,14 +30,14 @@
       color="primary"
       dark
     >
-      <v-app-bar-nav-icon @click.stop="drawerOpen = !drawerOpen"/>
+      <v-app-bar-nav-icon @click.stop="drawerOpen = !drawerOpen" />
       <v-app-bar-title>
         Phonebook
       </v-app-bar-title>
     </v-app-bar>
 
     <v-main>
-      <router-view/>
+      <router-view />
     </v-main>
   </v-app>
 </template>
@@ -49,7 +57,12 @@ export default {
       title: 'Contacts',
       to: '/contacts',
       icon: 'mdi-contacts'
-    }]
+    },
+      {
+        title: 'Add contact',
+        to: '/add',
+        icon: 'mdi-plus'
+      }]
   })
-}
+};
 </script>
