@@ -2,7 +2,7 @@
   <v-snackbar
     v-model="alertNotificationStatus"
     :color="alertNotification.color"
-    :multi-line="alertNotification.text > 40"
+    :multi-line="alertNotification.text > length"
     bottom
     right
     timeout="1000"
@@ -40,6 +40,9 @@ import {mapState} from 'vuex';
 
 export default {
   name: 'AlertNotification',
+  data: () => ({
+    length: 40
+  }),
   computed: {
     ...mapState(['alertNotification']),
     alertNotificationStatus: {

@@ -19,24 +19,30 @@
 
     <v-data-table
       :headers="headers"
-      :items="contact"
+      :items="contacts"
       :search="search"
       :single-select="true"
     >
       <template v-slot:item.action="{ item }">
-        <v-icon
+        <v-btn
           class="mr-2"
           small
+          icon
           @click.stop="assignValuesToEdit(item)"
         >
-          mdi-pencil
-        </v-icon>
-        <v-icon
+          <v-icon>
+            mdi-pencil
+          </v-icon>
+        </v-btn>
+        <v-btn
           small
+          icon
           @click.stop="deleteDialog = true; selectedItem = item"
         >
-          mdi-delete
-        </v-icon>
+          <v-icon>
+            mdi-delete
+          </v-icon>
+        </v-btn>
       </template>
     </v-data-table>
     <div />
@@ -153,7 +159,7 @@ export default {
     ]
   }),
   computed: {
-    ...mapState('contacts', ['contact']),
+    ...mapState('contact', ['contacts']),
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
   },
   created() {
@@ -162,7 +168,7 @@ export default {
     this.getContacts();
   },
   methods: {
-    ...mapActions('contacts', ['getContacts', 'deleteContact', 'editContact']),
+    ...mapActions('contact', ['getContacts', 'deleteContact', 'editContact']),
     _deleteContact(id) {
       this.deleteLoader = true;
       this.deleteContact(id).then(() => {
@@ -173,7 +179,7 @@ export default {
       );
     },
     assignValuesToEdit(item) {
-      this.selectedItem = this.contact.indexOf(item);
+      this.selectedItem = this.contacts.indexOf(item);
       this.editContactCredentials = Object.assign({}, item);
       this.editDialog = true;
     },

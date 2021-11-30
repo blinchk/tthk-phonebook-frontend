@@ -3,10 +3,10 @@ import VueRouter from 'vue-router';
 
 // Views
 import Home from '../views/Home.vue';
-import Contacts from '../views/Contacts.vue';
+import Contacts from '../views/contacts/Contacts.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register';
-import NewContact from '../views/NewContact';
+import NewContact from '../views/contacts/NewContact';
 
 Vue.use(VueRouter);
 
@@ -32,7 +32,7 @@ const routes = [
     component: Register
   },
   {
-    path: '/add',
+    path: '/contacts/add',
     name: 'New Contact',
     component: NewContact
   }

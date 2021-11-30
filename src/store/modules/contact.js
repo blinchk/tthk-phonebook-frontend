@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const state = () => ({
-  contact: []
+  contacts: []
 });
 
 const actions = {
@@ -122,7 +122,7 @@ const actions = {
 
 const mutations = {
   setContacts(state, payload) {
-    state.contact = payload;
+    state.contacts = payload;
   }
 };
 

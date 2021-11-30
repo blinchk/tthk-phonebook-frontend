@@ -73,7 +73,6 @@ export default {
     };
   },
   computed: {
-    ...mapState('contacts', ['contact']),
     ...mapState('user', ['user']),
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
   },
@@ -86,7 +85,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('contacts', ['addContact']),
+    ...mapActions('contact', ['addContact']),
     ...mapMutations('user', ['getAccessToken', 'getUser']),
     cleanFields() {
       this.firstName = '';
