@@ -75,6 +75,11 @@ export default {
   computed: {
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue'])
   },
+  created() {
+    if (!this.accessToken) {
+      this.getAccessToken();
+    }
+  },
   mounted() {
     if (!this.accessToken) {
       this.getAccessToken();
