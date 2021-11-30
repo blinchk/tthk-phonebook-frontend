@@ -38,14 +38,20 @@
 
     <v-main>
       <router-view />
+      <AlertNotification />
     </v-main>
   </v-app>
 </template>
 
 <script>
+import AlertNotification from "./components/AlertNotification";
 
 export default {
+
   name: 'App',
+  components: {
+    AlertNotification
+  },
 
   data: () => ({
     drawerOpen: false,

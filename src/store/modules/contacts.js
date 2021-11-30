@@ -19,7 +19,7 @@ const actions = {
       });
     });
   },
-  addContact({rootState, rootGetters}, payload) {
+  addContact({rootState, rootGetters, commit}, payload) {
     return new Promise((resolve, reject) => {
       axios.post(rootState.serverAddress + '/contact', {
         firstName: payload.firstName,
@@ -32,9 +32,19 @@ const actions = {
         },
       }).then((response) => {
         if (response.status === 200) {
+          commit('createNewAlert', {
+            color: 'success',
+            text: 'Contact added!'
+          }, {root: true});
           resolve();
         }
       }).catch((error) => {
+        if (error.response.status === 500) {
+          commit('createNewAlert', {
+            color: 'error',
+            text: 'Something went wrong'
+          }, {root: true});
+        }
         reject(error);
       });
     });

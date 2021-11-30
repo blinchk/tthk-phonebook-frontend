@@ -49,16 +49,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import {mapActions} from 'vuex';
 
 export default {
   name: 'Register',
-  methods: {
-    ...mapActions('user', ['createUser']),
-    signUp () {
-      this.createUser(this.credentials);
-    }
-  },
   data: () => ({
     credentials: {
       username: '',
@@ -67,7 +61,13 @@ export default {
       firstName: '',
       lastName: ''
     }
-  })
+  }),
+  methods: {
+    ...mapActions('user', ['createUser']),
+    signUp() {
+      this.createUser(this.credentials);
+    }
+  },
 };
 </script>
 
