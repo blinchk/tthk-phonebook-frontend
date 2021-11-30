@@ -17,8 +17,8 @@ const actions = {
       }).catch((error) => {
         commit('createNewAlert', {
           color: 'error',
-          text: error.response.data
-        });
+          text: error.response.data.status
+        }, {root: true});
         reject(error);
       });
     });
@@ -43,7 +43,7 @@ const actions = {
           resolve();
         }
       }).catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.data.status === 500) {
           commit('createNewAlert', {
             color: 'error',
             text: 'Something went wrong'
@@ -68,7 +68,7 @@ const actions = {
           resolve();
         }
       }).catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.data.status === 500) {
           commit('createNewAlert', {
             color: 'error',
             text: 'Internal server error'
@@ -76,7 +76,7 @@ const actions = {
         } else {
           commit('createNewAlert', {
             color: 'error',
-            text: error.response.status
+            text: error.response.data.status
           }, {root: true});
         }
         reject();
@@ -103,7 +103,7 @@ const actions = {
           resolve();
         }
       }).catch((error) => {
-        if (error.response.status === 500) {
+        if (error.response.data.status === 500) {
           commit('createNewAlert', {
             color: 'error',
             text: "Internal server error"
