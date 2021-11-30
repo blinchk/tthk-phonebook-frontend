@@ -44,11 +44,10 @@
 </template>
 
 <script>
-import AlertNotification from "./components/alert-notification";
+import AlertNotification from "./components/AlertNotification";
 import {mapGetters, mapMutations} from 'vuex';
 
 export default {
-
   name: 'App',
   components: {
     AlertNotification

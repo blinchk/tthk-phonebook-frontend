@@ -22,6 +22,11 @@ const routes = [
     component: Contacts
   },
   {
+    path: '/contacts/add',
+    name: 'New Contact',
+    component: NewContact
+  },
+  {
     path: '/login',
     name: 'Login',
     component: Login
@@ -31,11 +36,6 @@ const routes = [
     name: 'Register',
     component: Register
   },
-  {
-    path: '/contacts/add',
-    name: 'New Contact',
-    component: NewContact
-  }
 ];
 
 const router = new VueRouter({
