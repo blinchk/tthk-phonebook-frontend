@@ -186,6 +186,7 @@ export default {
         phone: this.editContactCredentials.phone,
         email: this.editContactCredentials.email,
       }).then(() => {
+        this.getContacts();
         this.editButtonLoading = false;
         this.editDialog = false;
       }).catch(() => {
