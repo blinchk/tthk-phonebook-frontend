@@ -1,7 +1,6 @@
 <template>
   <v-card
     class="mx-auto fill-height"
-    width="700"
   >
     <v-card-title>
       Contacts
