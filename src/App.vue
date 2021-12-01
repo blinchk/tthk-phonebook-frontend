@@ -11,6 +11,7 @@
             v-for="(item, key) in nav"
             :key="key"
             :to="item.to"
+            exact
           >
             <v-list-item-icon>
               <v-icon>
@@ -55,21 +56,23 @@ export default {
 
   data: () => ({
     drawerOpen: false,
-    nav: [{
-      title: 'Home',
-      to: '/',
-      icon: 'mdi-home'
-    }, {
-      title: 'Contacts',
-      to: '/contacts',
-      icon: 'mdi-contacts'
-    },
+    nav: [
+      {
+        title: 'Home',
+        to: '/',
+        icon: 'mdi-home'
+      },
+      {
+        title: 'Contacts',
+        to: '/contacts',
+        icon: 'mdi-contacts'
+      },
       {
         title: 'Add contact',
         to: '/contacts/add',
         icon: 'mdi-plus'
       }
-    ]
+    ],
   }),
   computed: {
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue'])
