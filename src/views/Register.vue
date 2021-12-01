@@ -79,7 +79,9 @@ export default {
     ...mapActions('user', ['createUser']),
     ...mapMutations(['createNewAlert']),
     signUp() {
-      this.createUser(this.credentials);
+      this.createUser(this.credentials).then(() => {
+        this.$router.push('/login');
+      });
     }
   },
 };

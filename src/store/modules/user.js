@@ -43,7 +43,7 @@ const actions = {
     });
   },
   createUser({rootState, commit}, payload) {
-    return new Promise((reject) => {
+    return new Promise((resolve, reject) => {
       axios.post(rootState.serverAddress + '/auth/register', {
         username: payload.username,
         firstName: payload.firstName,
@@ -56,6 +56,7 @@ const actions = {
             color: 'success',
             text: 'New account successfully created!'
           }, {root: true});
+          resolve();
         }
       }).catch((error) => {
         commit('createNewAlert', {

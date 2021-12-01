@@ -49,7 +49,9 @@ export default {
   methods: {
     ...mapActions('user', ['authUser']),
     signIn() {
-      this.authUser(this.credentials);
+      this.authUser(this.credentials).then(() => {
+        this.$router.push('/contacts');
+      });
     }
   },
 };
