@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import {mapActions} from 'vuex';
+import {mapActions, mapMutations, mapState} from 'vuex';
 
 export default {
   name: 'Register',
@@ -62,8 +62,22 @@ export default {
       lastName: ''
     }
   }),
+  computed: {
+    ...mapState('user', ["accessToken"])
+  },
+  mounted() {
+    if (this.accessToken) {
+      this.$router.push('home').then(() => {
+        this.createNewAlert({
+          color: 'error',
+          text: 'Already logged in'
+        });
+      });
+    }
+  },
   methods: {
     ...mapActions('user', ['createUser']),
+    ...mapMutations(['createNewAlert']),
     signUp() {
       this.createUser(this.credentials);
     }

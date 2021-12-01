@@ -24,15 +24,25 @@ const actions = {
           password: payload.password
         }
       }).then((response) => {
-        commit('setAccessToken', response.data.token);
-        commit('setUser', response.data);
-        resolve(response);
+        if (response.status === 200) {
+          commit('createNewAlert', {
+            color: 'success',
+            text: 'Successfully logged in!'
+          }, {root: true});
+          commit('setAccessToken', response.data.token);
+          commit('setUser', response.data);
+          resolve(response);
+        }
       }).catch((error) => {
+        commit('createNewAlert', {
+          color: 'error',
+          text: error.response.data
+        }, {root: true});
         reject(error);
       });
     });
   },
-  createUser({rootState}, payload) {
+  createUser({rootState, commit}, payload) {
     return new Promise((reject) => {
       axios.post(rootState.serverAddress + '/auth/register', {
         username: payload.username,
@@ -40,7 +50,18 @@ const actions = {
         lastName: payload.lastName,
         email: payload.email,
         password: payload.password
+      }).then((response) => {
+        if (response.status === 200) {
+          commit('createNewAlert', {
+            color: 'success',
+            text: 'New account successfully created!'
+          }, {root: true});
+        }
       }).catch((error) => {
+        commit('createNewAlert', {
+          color: 'error',
+          text: error.response.data
+        });
         reject(error);
       });
     });

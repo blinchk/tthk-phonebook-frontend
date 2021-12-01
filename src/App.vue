@@ -56,7 +56,11 @@ export default {
 
   data: () => ({
     drawerOpen: false,
-    nav: [
+
+  }),
+  computed: {
+    ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
+    nav: (this.accessToken()) ? [
       {
         title: 'Home',
         to: '/',
@@ -72,10 +76,16 @@ export default {
         to: '/contacts/add',
         icon: 'mdi-plus'
       }
-    ],
-  }),
-  computed: {
-    ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue'])
+    ] : [{
+      title: 'Register',
+      to: '/register',
+      icon: 'mdi-account-plus'
+    },
+      {
+        title: 'Log in',
+        to: '/login',
+        icon: 'mdi-login'
+      }],
   },
   created() {
     if (!this.accessToken) {

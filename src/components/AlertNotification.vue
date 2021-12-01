@@ -5,7 +5,7 @@
     :multi-line="alertNotification.text > length"
     bottom
     right
-    timeout="1000"
+    timeout="2000"
   >
     <v-icon
       v-if="alertNotification.color === 'error'"
