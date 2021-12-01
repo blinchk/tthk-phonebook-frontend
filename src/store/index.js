@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import user from './modules/user';
-import contacts from './modules/contacts';
+import contact from './modules/contact';
 
 Vue.use(Vuex);
 
@@ -34,6 +34,6 @@ export default new Vuex.Store({
   },
   modules: {
     user,
-    contacts
+    contact
   }
 });

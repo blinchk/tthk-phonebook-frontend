@@ -38,7 +38,7 @@
 
     <v-main>
       <router-view />
-      <AlertNotification />
+      <alert-notification />
     </v-main>
   </v-app>
 </template>
@@ -48,7 +48,6 @@ import AlertNotification from "./components/AlertNotification";
 import {mapGetters, mapMutations} from 'vuex';
 
 export default {
-
   name: 'App',
   components: {
     AlertNotification
@@ -67,7 +66,7 @@ export default {
     },
       {
         title: 'Add contact',
-        to: '/add',
+        to: '/contacts/add',
         icon: 'mdi-plus'
       }
     ]
@@ -76,11 +75,6 @@ export default {
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue'])
   },
   created() {
-    if (!this.accessToken) {
-      this.getAccessToken();
-    }
-  },
-  mounted() {
     if (!this.accessToken) {
       this.getAccessToken();
     }
