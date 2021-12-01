@@ -7,6 +7,7 @@ import Contacts from '../views/contacts/Contacts.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register';
 import NewContact from '../views/contacts/NewContact';
+import Groups from "../views/groups/Groups";
 
 Vue.use(VueRouter);
 
@@ -36,6 +37,11 @@ const routes = [
     name: 'Register',
     component: Register
   },
+  {
+    path: '/groups',
+    name: 'Groups',
+    component: Groups
+  }
 ];
 
 const router = new VueRouter({

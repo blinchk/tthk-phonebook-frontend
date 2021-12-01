@@ -17,7 +17,7 @@ const actions = {
       }).catch((error) => {
         commit('createNewAlert', {
           color: 'error',
-          text: error.response.data.status
+          text: error.status
         }, {root: true});
         reject(error);
       });
@@ -30,6 +30,9 @@ const actions = {
         lastName: payload.lastName,
         phone: payload.phone,
         email: payload.email,
+        group: {
+          id: payload.group
+        }
       }, {
         headers: {
           Authorization: rootGetters["user/accessTokenHeaderValue"]
@@ -55,7 +58,7 @@ const actions = {
   },
   deleteContact({rootState, rootGetters, commit}, payload) {
     return new Promise((resolve, reject) => {
-      axios.delete(rootState.serverAddress + /contact/ + payload.id, {
+      axios.delete(rootState.serverAddress + '/contact/' + payload.id, {
         headers: {
           Authorization: rootGetters["user/accessTokenHeaderValue"]
         }
@@ -90,7 +93,10 @@ const actions = {
         firstName: payload.firstName,
         lastName: payload.lastName,
         phone: payload.phone,
-        email: payload.email
+        email: payload.email,
+        group: {
+          id: payload.group
+        }
       }, {
         headers: {
           Authorization: rootGetters["user/accessTokenHeaderValue"]

@@ -62,31 +62,36 @@ export default {
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
     nav() {
       return this.accessToken ? [
-        {
-          title: 'Home',
-          to: '/',
-          icon: 'mdi-home'
-        },
-        {
-          title: 'Contacts',
-          to: '/contacts',
-          icon: 'mdi-contacts'
-        },
-        {
-          title: 'Add contact',
-          to: '/contacts/add',
-          icon: 'mdi-plus'
-        }] :
+          {
+            title: 'Home',
+            to: '/',
+            icon: 'mdi-home'
+          },
+          {
+            title: 'Contacts',
+            to: '/contacts',
+            icon: 'mdi-contacts'
+          },
+          {
+            title: 'Add contact',
+            to: '/contacts/add',
+            icon: 'mdi-plus'
+          },
+          {
+            title: 'Groups',
+            to: '/groups',
+            icon: 'mdi-account-group'
+          }] :
         [{
-        title: 'Register',
-        to: '/register',
-        icon: 'mdi-account-plus'
+          title: 'Register',
+          to: '/register',
+          icon: 'mdi-account-plus'
         },
-        {
-          title: 'Log in',
-          to: '/login',
-          icon: 'mdi-login'
-        }];
+          {
+            title: 'Log in',
+            to: '/login',
+            icon: 'mdi-login'
+          }];
     },
   },
   created() {
