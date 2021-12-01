@@ -85,7 +85,8 @@ const actions = {
   },
   editContact({rootState, rootGetters, commit}, payload) {
     return new Promise((resolve, reject) => {
-      axios.post(rootState.serverAddress + '/contact/' + payload.id, {
+      axios.post(rootState.serverAddress + '/contact/', {
+        id: payload.id,
         firstName: payload.firstName,
         lastName: payload.lastName,
         phone: payload.phone,
