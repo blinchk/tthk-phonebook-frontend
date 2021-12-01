@@ -3,12 +3,12 @@
     <v-col>
       <v-row class="justify-center">
         <v-card
-          flat
           max-width="500px"
           width="500px"
+          flat
         >
           <v-card-title>
-            Sign In
+            Sign Up
           </v-card-title>
           <v-form>
             <v-card-text>
@@ -17,15 +17,28 @@
                 label="Username"
               />
               <v-text-field
+                v-model="credentials.email"
+                type="email"
+                label="Email"
+              />
+              <v-text-field
+                v-model="credentials.firstName"
+                label="First Name"
+              />
+              <v-text-field
+                v-model="credentials.lastName"
+                label="Last Name"
+              />
+              <v-text-field
                 v-model="credentials.password"
-                label="Password"
                 type="password"
+                label="Password"
               />
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn @click.stop="signIn">
-                Sign In
+              <v-btn @click.stop="signUp">
+                Sign Up
               </v-btn>
             </v-card-actions>
           </v-form>
@@ -39,17 +52,20 @@
 import {mapActions} from 'vuex';
 
 export default {
-  name: 'Login',
+  name: 'Register',
   data: () => ({
     credentials: {
       username: '',
-      password: ''
+      email: '',
+      password: '',
+      firstName: '',
+      lastName: ''
     }
   }),
   methods: {
-    ...mapActions('user', ['authUser']),
-    signIn() {
-      this.authUser(this.credentials);
+    ...mapActions('user', ['createUser']),
+    signUp() {
+      this.createUser(this.credentials);
     }
   },
 };

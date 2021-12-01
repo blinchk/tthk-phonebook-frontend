@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 
 const state = () => ({
   accessToken: null,
@@ -8,15 +8,15 @@ const state = () => ({
     firstName: null,
     lastName: null
   }
-})
+});
 
 const getters = {
   accessToken: (state) => state.accessToken,
-  accessTokenHeaderValue: (state) => 'Bearer ' + state.accessToken
-}
+  accessTokenHeaderValue: (state) => {return 'Bearer ' + state.accessToken;}
+};
 
 const actions = {
-  authUser ({ rootState, commit }, payload) {
+  authUser({rootState, commit}, payload) {
     return new Promise((resolve, reject) => {
       axios.get(rootState.serverAddress + '/auth/login', {
         auth: {
@@ -24,32 +24,54 @@ const actions = {
           password: payload.password
         }
       }).then((response) => {
-        commit('setAccessToken', response.data.token)
-        commit('setUser', response.data)
-        resolve(response)
+        commit('setAccessToken', response.data.token);
+        commit('setUser', response.data);
+        resolve(response);
       }).catch((error) => {
-        reject(error)
-      })
-    })
+        reject(error);
+      });
+    });
+  },
+  createUser({rootState}, payload) {
+    return new Promise((reject) => {
+      axios.post(rootState.serverAddress + '/auth/register', {
+        username: payload.username,
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        email: payload.email,
+        password: payload.password
+      }).catch((error) => {
+        reject(error);
+      });
+    });
   }
-}
+};
 
 const mutations = {
-  setAccessToken (state, payload) {
-    localStorage.setItem('accessToken', payload)
-    state.accessToken = payload
+  setAccessToken(state, payload) {
+    localStorage.setItem('accessToken', payload);
+    state.accessToken = payload;
   },
-  setUser (state, payload) {
+  getAccessToken(state){
+    state.accessToken = localStorage.getItem('accessToken');
+  },
+  setUser(state, payload) {
     const user = {
       username: payload.username,
       email: payload.email,
       firstName: payload.firstName,
       lastName: payload.lastName
-    }
-    localStorage.setItem('userData', JSON.stringify(user))
-    state.user = user
+    };
+    localStorage.setItem('userData', JSON.stringify(user));
+    state.user = user;
+  },
+  getUser(state){
+    state.user.email = localStorage.getItem('userData.email');
+    state.user.username = localStorage.getItem('userData.username');
+    state.user.firstName = localStorage.getItem('userData.firstName');
+    state.user.lastName = localStorage.getItem('userData.lastName');
   }
-}
+};
 
 export default {
   namespaced: true,
@@ -57,4 +79,4 @@ export default {
   getters,
   actions,
   mutations
-}
+};
