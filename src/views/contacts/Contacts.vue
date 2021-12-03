@@ -15,7 +15,7 @@
       <v-spacer />
       <v-btn
         color="success"
-        to="/contacts/add"
+        @click.stop="addDialog = true"
       >
         <v-icon left>
           mdi-plus
@@ -23,21 +23,15 @@
       </v-btn>
     </v-card-title>
     <v-divider />
-    <v-col class="text-right">
-      <v-btn
-        color="primary"
-        dark
-        @click.stop="addDialog = true"
-      >
-        New Contact
-      </v-btn>
-    </v-col>
 
     <v-data-table
       :headers="headers"
       :items="contacts"
       :search="search"
     >
+      <template v-slot:item.group="{ item }">
+        {{ item.group ? item.group.title : "" }}
+      </template>
       <template v-slot:item.action="{ item }">
         <v-btn
           class="mr-2"
@@ -123,10 +117,12 @@
           <v-row class="mr-3 ml-3">
             <v-select
               v-model="editContactCredentials.group"
+              clearable
               :items="groups"
               item-text="title"
               item-value="id"
               label="Group"
+              @click:clear="clearGroup()"
             />
           </v-row>
         </v-col>
@@ -314,6 +310,9 @@ export default {
     },
     _editContact() {
       this.editLoader = true;
+      if (this.editContactCredentials.group) {
+        this.editContactCredentials.group = null;
+      }
       this.editContact({
         id: this.editContactCredentials.id,
         firstName: this.editContactCredentials.firstName,
@@ -336,6 +335,9 @@ export default {
       this.email = '';
       this.group = [];
     },
+    clearGroup() {
+      this.editContactCredentials.group = null;
+    }
   }
 };
 

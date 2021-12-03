@@ -71,28 +71,24 @@ export default {
   }),
   computed: {
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
+    ...mapState('user', ['user']),
     nav() {
       return this.accessToken ? [
-          {
-            title: 'Home',
-            to: '/',
-            icon: 'mdi-home'
-          },
-          {
-            title: 'Contacts',
-            to: '/contacts',
-            icon: 'mdi-contacts'
-          },
-          {
-            title: 'Add contact',
-            to: '/contacts/add',
-            icon: 'mdi-plus'
-          },
-          {
-            title: 'Groups',
-            to: '/groups',
-            icon: 'mdi-account-group'
-          }] :
+        {
+          title: 'Home',
+          to: '/',
+          icon: 'mdi-home'
+        },
+        {
+          title: 'Contacts',
+          to: '/contacts',
+          icon: 'mdi-contacts'
+        },
+        {
+          title: 'Add contact',
+          to: '/contacts/add',
+          icon: 'mdi-plus'
+        }] :
         [{
           title: 'Register',
           to: '/register',
@@ -108,6 +104,7 @@ export default {
   created() {
     if (!this.accessToken) {
       this.getAccessToken();
+      this.getUser();
     }
   },
   methods: {

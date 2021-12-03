@@ -94,9 +94,9 @@ const actions = {
         lastName: payload.lastName,
         phone: payload.phone,
         email: payload.email,
-        group: {
+        group: payload.group ? {
           id: payload.group
-        }
+        } : null
       }, {
         headers: {
           Authorization: rootGetters["user/accessTokenHeaderValue"]
