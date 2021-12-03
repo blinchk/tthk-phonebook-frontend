@@ -10,7 +10,7 @@
           <v-card-title>
             Sign In
           </v-card-title>
-          <v-form>
+          <v-form @submit.prevent="signIn">
             <v-card-text>
               <v-text-field
                 v-model="credentials.username"
@@ -24,7 +24,9 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn @click.stop="signIn">
+              <v-btn
+                type="submit"
+              >
                 Sign In
               </v-btn>
             </v-card-actions>

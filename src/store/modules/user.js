@@ -16,6 +16,10 @@ const getters = {
 };
 
 const actions = {
+  logoutUser({commit}) {
+    commit('setAccessToken', null);
+    commit('setUser', null);
+  },
   authUser({rootState, commit}, payload) {
     return new Promise((resolve, reject) => {
       axios.get(rootState.serverAddress + '/auth/login', {
@@ -71,13 +75,22 @@ const actions = {
 
 const mutations = {
   setAccessToken(state, payload) {
-    localStorage.setItem('accessToken', payload);
+    if (payload) {
+      localStorage.setItem('accessToken', payload);
+    } else {
+      localStorage.removeItem('accessToken');
+    }
     state.accessToken = payload;
   },
   getAccessToken(state){
     state.accessToken = localStorage.getItem('accessToken');
   },
   setUser(state, payload) {
+    if (!payload) {
+      localStorage.removeItem('userData');
+      state.user = user;
+      return;
+    }
     const user = {
       username: payload.username,
       email: payload.email,
@@ -88,10 +101,7 @@ const mutations = {
     state.user = user;
   },
   getUser(state){
-    state.user.email = localStorage.getItem('userData.email');
-    state.user.username = localStorage.getItem('userData.username');
-    state.user.firstName = localStorage.getItem('userData.firstName');
-    state.user.lastName = localStorage.getItem('userData.lastName');
+    state.user = JSON.parse(localStorage.getItem('userData'));
   }
 };
 

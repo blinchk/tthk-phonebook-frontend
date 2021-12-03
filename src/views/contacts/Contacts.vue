@@ -12,6 +12,15 @@
         label="Search"
         single-line
       />
+      <v-spacer />
+      <v-btn
+        color="success"
+        to="/contacts/add"
+      >
+        <v-icon left>
+          mdi-plus
+        </v-icon>Add
+      </v-btn>
     </v-card-title>
     <v-divider />
     <v-col class="text-right">
