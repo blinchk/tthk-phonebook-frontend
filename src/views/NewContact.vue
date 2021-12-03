@@ -1,9 +1,11 @@
 <template>
-  <v-layout wrap>
+  <v-layout
+    wrap
+  >
     <v-col cols="12">
       <v-row class="mb-3 justify-center">
         <v-card
-          elevation="3"
+          flat
           max-width="700px"
           width="700px"
         >

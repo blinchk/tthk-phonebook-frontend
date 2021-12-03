@@ -35,6 +35,17 @@
       <v-app-bar-title>
         Phonebook
       </v-app-bar-title>
+      <v-spacer />
+      <span v-if="user">
+        <strong>{{ user.firstName + " " + user.lastName }}</strong>
+        <v-btn
+          icon
+          class="mx-2"
+          @click.stop="logout"
+        ><v-icon>
+          mdi-logout
+        </v-icon></v-btn>
+      </span>
     </v-app-bar>
 
     <v-main>
@@ -46,7 +57,7 @@
 
 <script>
 import AlertNotification from "./components/AlertNotification";
-import {mapGetters, mapMutations} from 'vuex';
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex';
 
 export default {
   name: 'App',
@@ -59,43 +70,50 @@ export default {
 
   }),
   computed: {
+    ...mapState('user', ['user']),
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
     nav() {
       return this.accessToken ? [
-        {
-          title: 'Home',
-          to: '/',
-          icon: 'mdi-home'
-        },
-        {
-          title: 'Contacts',
-          to: '/contacts',
-          icon: 'mdi-contacts'
-        },
-        {
-          title: 'Add contact',
-          to: '/contacts/add',
-          icon: 'mdi-plus'
-        }] :
+          {
+            title: 'Home',
+            to: '/',
+            icon: 'mdi-home'
+          },
+          {
+            title: 'Contacts',
+            to: '/contacts',
+            icon: 'mdi-contacts'
+          },
+          {
+            title: 'Add contact',
+            to: '/contacts/add',
+            icon: 'mdi-plus'
+          }] :
         [{
-        title: 'Register',
-        to: '/register',
-        icon: 'mdi-account-plus'
+          title: 'Register',
+          to: '/register',
+          icon: 'mdi-account-plus'
         },
-        {
-          title: 'Log in',
-          to: '/login',
-          icon: 'mdi-login'
-        }];
+          {
+            title: 'Log in',
+            to: '/login',
+            icon: 'mdi-login'
+          }];
     },
   },
   created() {
     if (!this.accessToken) {
+      this.getUser();
       this.getAccessToken();
     }
   },
   methods: {
-    ...mapMutations('user', ['getAccessToken'])
+    ...mapMutations('user', ['getAccessToken', 'getUser']),
+    ...mapActions('user', ['logoutUser']),
+    logout() {
+      this.logoutUser();
+      this.$router.push('/login');
+    }
   },
 };
 </script>
