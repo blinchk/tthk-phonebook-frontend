@@ -3,7 +3,7 @@
     class="mx-auto fill-height"
   >
     <v-card-title>
-      Contacts
+      Groups
       <v-spacer />
       <v-text-field
         v-model="search"
