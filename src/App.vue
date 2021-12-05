@@ -35,17 +35,6 @@
       <v-app-bar-title>
         Phonebook
       </v-app-bar-title>
-      <v-spacer />
-      <span v-if="user">
-        <strong>{{ user.firstName + " " + user.lastName }}</strong>
-        <v-btn
-          icon
-          class="mx-2"
-          @click.stop="logout"
-        ><v-icon>
-          mdi-logout
-        </v-icon></v-btn>
-      </span>
     </v-app-bar>
 
     <v-main>
@@ -57,7 +46,7 @@
 
 <script>
 import AlertNotification from "./components/AlertNotification";
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex';
+import {mapGetters, mapMutations} from 'vuex';
 
 export default {
   name: 'App',
@@ -70,7 +59,6 @@ export default {
 
   }),
   computed: {
-    ...mapState('user', ['user']),
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
     nav() {
       return this.accessToken ? [
@@ -85,9 +73,9 @@ export default {
             icon: 'mdi-contacts'
           },
           {
-            title: 'Add contact',
-            to: '/contacts/add',
-            icon: 'mdi-plus'
+            title: 'Groups',
+            to: '/groups',
+            icon: 'mdi-account-group'
           }] :
         [{
           title: 'Register',
@@ -103,17 +91,11 @@ export default {
   },
   created() {
     if (!this.accessToken) {
-      this.getUser();
       this.getAccessToken();
     }
   },
   methods: {
-    ...mapMutations('user', ['getAccessToken', 'getUser']),
-    ...mapActions('user', ['logoutUser']),
-    logout() {
-      this.logoutUser();
-      this.$router.push('/login');
-    }
+    ...mapMutations('user', ['getAccessToken'])
   },
 };
 </script>

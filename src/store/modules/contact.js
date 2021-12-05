@@ -17,7 +17,7 @@ const actions = {
       }).catch((error) => {
         commit('createNewAlert', {
           color: 'error',
-          text: error.response.data.status
+          text: error.status
         }, {root: true});
         reject(error);
       });
@@ -30,6 +30,9 @@ const actions = {
         lastName: payload.lastName,
         phone: payload.phone,
         email: payload.email,
+        group: payload.group ? {
+          id: payload.group
+        } : null
       }, {
         headers: {
           Authorization: rootGetters["user/accessTokenHeaderValue"]
@@ -43,19 +46,17 @@ const actions = {
           resolve();
         }
       }).catch((error) => {
-        if (error.response.data.status === 500) {
           commit('createNewAlert', {
             color: 'error',
-            text: 'Something went wrong'
+            text: error.response.data
           }, {root: true});
-        }
         reject(error);
       });
     });
   },
   deleteContact({rootState, rootGetters, commit}, payload) {
     return new Promise((resolve, reject) => {
-      axios.delete(rootState.serverAddress + /contact/ + payload.id, {
+      axios.delete(rootState.serverAddress + '/contact/' + payload.id, {
         headers: {
           Authorization: rootGetters["user/accessTokenHeaderValue"]
         }
@@ -85,12 +86,15 @@ const actions = {
   },
   editContact({rootState, rootGetters, commit}, payload) {
     return new Promise((resolve, reject) => {
-      axios.post(rootState.serverAddress + '/contact/', {
+      axios.post(rootState.serverAddress + '/contact', {
         id: payload.id,
         firstName: payload.firstName,
         lastName: payload.lastName,
         phone: payload.phone,
-        email: payload.email
+        email: payload.email,
+        group: payload.group ? {
+          id: payload.group
+        } : null
       }, {
         headers: {
           Authorization: rootGetters["user/accessTokenHeaderValue"]

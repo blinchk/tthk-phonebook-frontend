@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 
 import user from './modules/user';
 import contact from './modules/contact';
+import group from "./modules/group";
 
 Vue.use(Vuex);
 
@@ -34,6 +35,7 @@ export default new Vuex.Store({
   },
   modules: {
     user,
-    contact
+    contact,
+    group
   }
 });

@@ -15,21 +15,23 @@
       <v-spacer />
       <v-btn
         color="success"
-        to="/contacts/add"
+        @click.stop="addDialog = true"
       >
         <v-icon left>
           mdi-plus
         </v-icon>Add
       </v-btn>
     </v-card-title>
-
+    <v-divider />
 
     <v-data-table
       :headers="headers"
       :items="contacts"
       :search="search"
-      :single-select="true"
     >
+      <template v-slot:item.group="{ item }">
+        {{ item.group ? item.group.title : "" }}
+      </template>
       <template v-slot:item.action="{ item }">
         <v-btn
           class="mr-2"
@@ -52,7 +54,6 @@
         </v-btn>
       </template>
     </v-data-table>
-    <div />
     <v-dialog
       v-model="deleteDialog"
       width="500"
@@ -92,25 +93,36 @@
           <v-row class="ml-2 mr-2">
             <v-text-field
               v-model="editContactCredentials.firstName"
-              class="ml-2 mr-2"
+              class="ml-1 mr-2"
               label="First Name"
             />
             <v-text-field
               v-model="editContactCredentials.lastName"
-              class="mr-2"
+              class="mr-2 ml-2"
               label="Last Name"
             />
           </v-row>
           <v-row class="mr-2 ml-2">
             <v-text-field
               v-model="editContactCredentials.phone"
-              class="mr-2 ml-2"
+              class="mr-2 ml-1"
               label="Phone"
             />
             <v-text-field
               v-model="editContactCredentials.email"
               class="mr-2 ml-2"
               label="Email"
+            />
+          </v-row>
+          <v-row class="mr-3 ml-3">
+            <v-select
+              v-model="editContactCredentials.group"
+              clearable
+              :items="groups"
+              item-text="title"
+              item-value="id"
+              label="Group"
+              @click:clear="clearGroup()"
             />
           </v-row>
         </v-col>
@@ -124,7 +136,7 @@
             Cancel
           </v-btn>
           <v-btn
-            :loading="editButtonLoading"
+            :loading="editLoader"
             color="success"
             text
             @click.stop="_editContact(editContactCredentials.id)"
@@ -132,6 +144,80 @@
             Edit
           </v-btn>
         </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="addDialog">
+      <v-card
+        max-width="700px"
+        width="700px"
+      >
+        <v-form
+          ref="contactAddForm"
+          @submit.prevent="contactAdding()"
+        >
+          <v-card-title>Add new contact</v-card-title>
+          <v-col cols="12">
+            <v-row class="ml-2 mr-2">
+              <v-text-field
+                v-model="firstName"
+                class="ml-1 mr-2"
+                label="First Name"
+              />
+              <v-text-field
+                v-model="lastName"
+                class="mr-2 ml-2"
+                label="Last Name"
+              />
+            </v-row>
+            <v-row class="mr-2 ml-2">
+              <v-text-field
+                v-model="phone"
+                class="mr-2 ml-1"
+                label="Phone"
+              />
+              <v-text-field
+                v-model="email"
+                class="mr-2 ml-2"
+                label="Email"
+              />
+            </v-row>
+            <v-row class="mr-3 ml-3">
+              <v-select
+                v-model="group"
+                :items="groups"
+                item-text="title"
+                item-value="id"
+                label="Group"
+              />
+            </v-row>
+          </v-col>
+          <v-card-actions class="text-right">
+            <v-col class="text-right">
+              <v-btn
+                text
+                @click.stop="addDialog = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                :loading="addLoader"
+                class="text-right"
+                color="success"
+                text
+                type="submit"
+              >
+                <v-spacer />
+                <v-icon left>
+                  mdi-plus
+                </v-icon>
+                Add contact
+              </v-btn>
+            </v-col>
+          </v-card-actions>
+        </v-form>
+        <v-col cols="12">
+          <v-row class="ml-2 mr-2" />
+        </v-col>
       </v-card>
     </v-dialog>
   </v-card>
@@ -150,32 +236,62 @@ export default {
     deleteDialog: false,
     editDialog: false,
     editLoader: false,
-    editButtonLoading: false,
+    addDialog: false,
+    addLoader: false,
     editContactCredentials: {
       firstName: '',
       lastName: '',
       phone: '',
-      email: ''
+      email: '',
+      group: null
     },
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    group: null,
     headers: [
       {text: 'First Name', value: 'firstName'},
       {text: 'Last Name', value: 'lastName'},
       {text: 'Phone', value: 'phone', sortable: false},
       {text: 'Email', value: 'email', sortable: false},
+      {text: 'Group', value: 'group.title'},
       {text: 'Action', value: 'action', sortable: false}
     ]
   }),
   computed: {
     ...mapState('contact', ['contacts']),
+    ...mapState('group', ['groups']),
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
   },
   created() {
   },
   mounted() {
     this.getContacts();
+    this.getGroups();
   },
   methods: {
-    ...mapActions('contact', ['getContacts', 'deleteContact', 'editContact']),
+    ...mapActions('contact', ['getContacts', 'addContact', 'deleteContact', 'editContact']),
+    ...mapActions('group', ['getGroups']),
+    async contactAdding() {
+      this.addLoader = true;
+      this.addContact({
+        firstName: this.firstName,
+        lastName: this.lastName,
+        phone: this.phone,
+        email: this.email,
+        group: this.group
+      })
+        .then(() => {
+          this.addDialog = false;
+          this.addLoader = false;
+          this.cleanFields();
+          this.getContacts();
+        })
+        .catch(() => {
+          this.addLoader = false;
+        });
+    },
     _deleteContact(id) {
       this.deleteLoader = true;
       this.deleteContact(id).then(() => {
@@ -191,20 +307,32 @@ export default {
       this.editDialog = true;
     },
     _editContact() {
-      this.editButtonLoading = true;
+      this.editLoader = true;
       this.editContact({
         id: this.editContactCredentials.id,
         firstName: this.editContactCredentials.firstName,
         lastName: this.editContactCredentials.lastName,
         phone: this.editContactCredentials.phone,
         email: this.editContactCredentials.email,
+        group: this.editContactCredentials.group
+
       }).then(() => {
         this.getContacts();
-        this.editButtonLoading = false;
+        this.editLoader = false;
         this.editDialog = false;
       }).catch(() => {
-        this.editButtonLoading = false;
+        this.editLoader = false;
       });
+    },
+    cleanFields() {
+      this.firstName = '';
+      this.lastName = '';
+      this.phone = '';
+      this.email = '';
+      this.group = '';
+    },
+    clearGroup() {
+      this.editContactCredentials.group = null;
     }
   }
 };
