@@ -280,9 +280,7 @@ export default {
         lastName: this.lastName,
         phone: this.phone,
         email: this.email,
-        group: {
-          id: this.group
-        }
+        group: this.group
       })
         .then(() => {
           this.addDialog = false;
@@ -310,9 +308,6 @@ export default {
     },
     _editContact() {
       this.editLoader = true;
-      if (this.editContactCredentials.group) {
-        this.editContactCredentials.group = null;
-      }
       this.editContact({
         id: this.editContactCredentials.id,
         firstName: this.editContactCredentials.firstName,
