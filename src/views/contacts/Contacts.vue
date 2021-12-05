@@ -243,19 +243,19 @@ export default {
       lastName: '',
       phone: '',
       email: '',
-      group: ''
+      group: null
     },
     firstName: '',
     lastName: '',
     phone: '',
     email: '',
-    group: '',
+    group: null,
     headers: [
       {text: 'First Name', value: 'firstName'},
       {text: 'Last Name', value: 'lastName'},
       {text: 'Phone', value: 'phone', sortable: false},
       {text: 'Email', value: 'email', sortable: false},
-      {text: 'Group', value: 'group'},
+      {text: 'Group', value: 'group.title'},
       {text: 'Action', value: 'action', sortable: false}
     ]
   }),
@@ -315,6 +315,7 @@ export default {
         phone: this.editContactCredentials.phone,
         email: this.editContactCredentials.email,
         group: this.editContactCredentials.group
+
       }).then(() => {
         this.getContacts();
         this.editLoader = false;
@@ -328,7 +329,7 @@ export default {
       this.lastName = '';
       this.phone = '';
       this.email = '';
-      this.group = [];
+      this.group = '';
     },
     clearGroup() {
       this.editContactCredentials.group = null;

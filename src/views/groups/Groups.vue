@@ -12,19 +12,19 @@
         label="Search"
         single-line
       />
-    </v-card-title>
-    <v-divider />
-    <v-col class="text-right">
+      <v-spacer />
       <v-btn
-        color="primary"
+        color="success"
         dark
         @click.stop="addDialog = true"
       >
-        New Group
+        <v-icon left>
+          mdi-plus
+        </v-icon>
+        Add
       </v-btn>
-    </v-col>
-
-
+    </v-card-title>
+    <v-divider />
     <v-data-table
       :headers="headers"
       :items="groups"
@@ -232,6 +232,8 @@ export default {
         this.getGroups();
         this.deleteLoader = false;
         this.deleteDialog = false;
+      }).catch(() => {
+        this.deleteLoader = false;
       });
     }
   }

@@ -46,12 +46,10 @@ const actions = {
           resolve();
         }
       }).catch((error) => {
-        if (error.response.data.status === 500) {
           commit('createNewAlert', {
             color: 'error',
-            text: 'Something went wrong'
+            text: error.response.data
           }, {root: true});
-        }
         reject(error);
       });
     });
@@ -88,7 +86,7 @@ const actions = {
   },
   editContact({rootState, rootGetters, commit}, payload) {
     return new Promise((resolve, reject) => {
-      axios.post(rootState.serverAddress + '/contact/', {
+      axios.post(rootState.serverAddress + '/contact', {
         id: payload.id,
         firstName: payload.firstName,
         lastName: payload.lastName,
