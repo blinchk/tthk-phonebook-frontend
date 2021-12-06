@@ -168,6 +168,75 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog
+      v-model="copyDialog"
+      width="500px"
+    >
+      <v-card>
+        <v-card-title>
+          Copy shared group
+        </v-card-title>
+        <v-col
+          cols="
+      12"
+        >
+          <v-row class="ml-2 mr-2">
+            <v-progress-circular
+              v-if="!groupToCopy"
+              indeterminate
+            />
+            <v-text-field
+              v-else
+              v-model="groupToCopy.title"
+              disabled
+              class="mr-2 ml-1"
+              label="Name"
+            />
+          </v-row>
+          <v-progress-circular
+            v-if="!groupToCopy"
+            indeterminate
+          />
+          <v-list v-else>
+            <v-list-item-group>
+              <v-list-item
+                v-for="contact in groupToCopy.contacts"
+                :key="contact.id"
+                disabled
+              >
+                <v-list-item-title>
+                  {{ contact.firstName && contact.lastName ? `${contact.firstName} ${contact.lastName}` : contact.firstName }}
+                  <span v-if="contact.phone">
+                    <br>{{ contact.phone }}
+                  </span>
+                  <span v-if="contact.email">| {{ contact.email }}</span>
+                </v-list-item-title>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-col>
+
+        <v-divider />
+        <v-card-actions>
+          <v-col class="text-right">
+            <v-btn
+              text
+              @click.stop="copyDialog = false"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              :loading="addLoader"
+              color="success"
+              text
+              @click.stop="_copyGroup(groupToCopy.id)"
+            >
+              Add
+            </v-btn>
+          </v-col>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
@@ -192,24 +261,33 @@ export default {
     addDialog: false,
     addLoader: false,
     tableLoader: false,
+    copyDialog: false,
     search: '',
     selectedItem: '',
-    title: ''
+    title: '',
+    groupToCopy: null
 
   }),
   computed: {
     ...mapState('group', ['groups'])
   },
   mounted() {
-    this.getGroups().then(() => {}).catch((error) => {
+    this.getGroups().then(() => {
+      const groupIdToCopy = this.$route.query.add ?? null;
+      if (groupIdToCopy) {
+        this.getGroup({
+          id: groupIdToCopy
+        }).then((group) => {
+          this.groupToCopy = group;
+          this.copyDialog = true;
+        });
+      }
+    }).catch((error) => {
       if (error.response.status === 401) this.$router.push('/login');
     });
-    if (this.$route.query.add) {
-      console.log('add group with id ' + this.$route.query.add);
-    }
   },
   methods: {
-    ...mapActions('group', ['getGroups', 'addGroup', 'deleteGroup', 'editGroup']),
+    ...mapActions('group', ['getGroup', 'getGroups', 'addGroup', 'deleteGroup', 'editGroup', 'copyGroup']),
     ...mapMutations(['createNewAlert']),
     async _addGroup() {
       this.addLoader = true;
@@ -256,6 +334,16 @@ export default {
       this.createNewAlert({
         color: 'success',
         text: `Group with ID ${id} copied to clipboard successfully`
+      });
+    },
+    _copyGroup(id) {
+      this.copyGroup({
+        id: id
+      }).then(() => {
+        this.copyDialog = false;
+        this.$router.push(this.$route.path);
+      }).catch(() => {
+        this.copyDialog = false;
       });
     }
   }
