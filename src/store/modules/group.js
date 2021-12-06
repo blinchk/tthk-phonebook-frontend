@@ -5,7 +5,7 @@ const state = () => ({
 });
 
 const actions = {
-  getGroups({rootState, rootGetters, commit}) {
+  getGroups({rootState, rootGetters, commit, dispatch}) {
     return new Promise((resolve, reject) => {
       axios.get(rootState.serverAddress + '/group', {
         headers: {
@@ -17,10 +17,7 @@ const actions = {
           resolve(response);
         }
       }).catch((error) => {
-        commit('createNewAlert', {
-          color: 'error',
-          text: error.status
-        }, {root: true});
+        dispatch('user/catchExpiredSessionError', error, {root: true});
         reject(error);
       });
     });

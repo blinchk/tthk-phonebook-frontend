@@ -50,6 +50,15 @@
             mdi-delete
           </v-icon>
         </v-btn>
+        <v-btn
+          small
+          icon
+          @click.stop="shareGroup(item.id)"
+        >
+          <v-icon>
+            mdi-share
+          </v-icon>
+        </v-btn>
       </template>
     </v-data-table>
     <v-dialog
@@ -164,7 +173,7 @@
 
 <script>
 
-import {mapActions, mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {
   name: "Groups",
@@ -192,10 +201,16 @@ export default {
     ...mapState('group', ['groups'])
   },
   mounted() {
-    this.getGroups();
+    this.getGroups().then(() => {}).catch((error) => {
+      if (error.response.status === 401) this.$router.push('/login');
+    });
+    if (this.$route.query.add) {
+      console.log('add group with id ' + this.$route.query.add);
+    }
   },
   methods: {
     ...mapActions('group', ['getGroups', 'addGroup', 'deleteGroup', 'editGroup']),
+    ...mapMutations(['createNewAlert']),
     async _addGroup() {
       this.addLoader = true;
       this.addGroup({
@@ -234,6 +249,13 @@ export default {
         this.deleteDialog = false;
       }).catch(() => {
         this.deleteLoader = false;
+      });
+    },
+    shareGroup(id) {
+      navigator.clipboard.writeText("https://phonebook.laus.me/groups?add=" + id);
+      this.createNewAlert({
+        color: 'success',
+        text: `Group with ID ${id} copied to clipboard successfully`
       });
     }
   }

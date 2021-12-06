@@ -19,6 +19,10 @@ const actions = {
   logoutUser({commit}) {
     commit('setAccessToken', null);
     commit('setUser', null);
+    commit('createNewAlert', {
+      color: 'success',
+      text: 'Successfully logged out!'
+    }, {root: true});
   },
   authUser({rootState, commit}, payload) {
     return new Promise((resolve, reject) => {
@@ -70,6 +74,20 @@ const actions = {
         reject(error);
       });
     });
+  },
+  catchExpiredSessionError({ commit, dispatch }, error) {
+    if (error.response.status === 401) {
+      commit('createNewAlert', {
+        color: 'error',
+        text: 'Session expired'
+      }, { root: true });
+      dispatch('logoutUser');
+    } else {
+      commit('createNewAlert', {
+        color: 'error',
+        text: error.response.data
+      }, { root: true });
+    }
   }
 };
 

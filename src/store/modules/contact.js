@@ -5,7 +5,21 @@ const state = () => ({
 });
 
 const actions = {
-  getContacts({rootState, rootGetters, commit}) {
+  getContact({rootState, rootGetters, dispatch}, payload) {
+    return new Promise((resolve, reject) => {
+      axios.get(rootState.serverAddress + '/contact/' + payload.id, {
+        headers: {
+          Authorization: rootGetters["user/accessTokenHeaderValue"]
+        }
+      }).then((response) => {
+        resolve(response.data);
+      }).catch((error) => {
+        dispatch('user/catchExpiredSessionError', error, {root: true});
+        reject(error);
+      });
+    });
+  },
+  getContacts({rootState, rootGetters, commit, dispatch}) {
     return new Promise((resolve, reject) => {
       axios.get(rootState.serverAddress + '/contact', {
         headers: {
@@ -15,10 +29,7 @@ const actions = {
         commit('setContacts', response.data);
         resolve(response);
       }).catch((error) => {
-        commit('createNewAlert', {
-          color: 'error',
-          text: error.status
-        }, {root: true});
+        dispatch('user/catchExpiredSessionError', error, {root: true});
         reject(error);
       });
     });
