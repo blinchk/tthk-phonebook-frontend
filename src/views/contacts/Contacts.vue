@@ -52,6 +52,15 @@
             mdi-delete
           </v-icon>
         </v-btn>
+        <v-btn
+          small
+          icon
+          @click.stop="shareContact(item.id)"
+        >
+          <v-icon>
+            mdi-share
+          </v-icon>
+        </v-btn>
       </template>
     </v-data-table>
     <v-dialog
@@ -224,7 +233,7 @@
 </template>
 
 <script lang="js">
-import {mapActions, mapGetters, mapState} from 'vuex';
+import {mapActions, mapGetters, mapState, mapMutations} from 'vuex';
 
 export default {
   name: 'Contacts',
@@ -257,21 +266,40 @@ export default {
       {text: 'Email', value: 'email', sortable: false},
       {text: 'Group', value: 'group.title'},
       {text: 'Action', value: 'action', sortable: false}
-    ]
+    ],
+    isContactShared: false
   }),
   computed: {
     ...mapState('contact', ['contacts']),
     ...mapState('group', ['groups']),
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
   },
-  created() {
-  },
+  created() {},
   mounted() {
-    this.getContacts();
-    this.getGroups();
+    this.getContacts().then(() => {
+      this.getGroups().then(() => {}).catch((error) => {
+        if (error.response.status === 401) this.$router.push('/login');
+      });
+    }).catch((error) => {
+      if (error.response.status === 401) this.$router.push('/login');
+    });
+    if (this.$route.query.add) {
+      console.log("let's go add contact with ID: " + this.$route.query.add);
+      this.getContact({
+        id: this.$route.query.add
+      }).then((contact) => {
+        this.isContactShared = true;
+        this.addDialog = true;
+        this.firstName = contact.firstName;
+        this.lastName = contact.lastName;
+        this.phone = contact.phone;
+        this.email = contact.email;
+      });
+    }
   },
   methods: {
-    ...mapActions('contact', ['getContacts', 'addContact', 'deleteContact', 'editContact']),
+    ...mapMutations(['createNewAlert']),
+    ...mapActions('contact', ['getContacts', 'addContact', 'deleteContact', 'editContact', 'getContact']),
     ...mapActions('group', ['getGroups']),
     async contactAdding() {
       this.addLoader = true;
@@ -283,12 +311,20 @@ export default {
         group: this.group
       })
         .then(() => {
+          if (this.isContactShared) {
+            this.$router.push(this.$route.path);
+            this.isContactShared = false;
+          }
           this.addDialog = false;
           this.addLoader = false;
           this.cleanFields();
           this.getContacts();
         })
         .catch(() => {
+          if (this.isContactShared) {
+            this.$router.push(this.$route.path);
+            this.isContactShared = false;
+          }
           this.addLoader = false;
         });
     },
@@ -333,6 +369,13 @@ export default {
     },
     clearGroup() {
       this.editContactCredentials.group = null;
+    },
+    shareContact(id) {
+      navigator.clipboard.writeText("https://phonebook.laus.me/contacts?add=" + id);
+      this.createNewAlert({
+        color: 'success',
+        text: `URL to contact with ID ${id} copied to clipboard.`
+      });
     }
   }
 };

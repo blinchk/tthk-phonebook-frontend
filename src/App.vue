@@ -35,6 +35,17 @@
       <v-app-bar-title>
         Phonebook
       </v-app-bar-title>
+      <v-spacer />
+      <span v-if="user">
+        <strong>{{ user.firstName + " " + user.lastName }}</strong>
+        <v-btn
+          icon
+          class="mx-2"
+          @click.stop="logout"
+        ><v-icon>
+          mdi-logout
+        </v-icon></v-btn>
+      </span>
     </v-app-bar>
 
     <v-main>
@@ -46,7 +57,7 @@
 
 <script>
 import AlertNotification from "./components/AlertNotification";
-import {mapGetters, mapMutations} from 'vuex';
+import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
 
 export default {
   name: 'App',
@@ -59,6 +70,7 @@ export default {
 
   }),
   computed: {
+    ...mapState('user', ['user']),
     ...mapGetters('user', ['accessToken', 'accessTokenHeaderValue']),
     nav() {
       return this.accessToken ? [
@@ -70,7 +82,7 @@ export default {
           {
             title: 'Contacts',
             to: '/contacts',
-            icon: 'mdi-contacts'
+            icon: 'mdi-account'
           },
           {
             title: 'Groups',
@@ -92,10 +104,16 @@ export default {
   created() {
     if (!this.accessToken) {
       this.getAccessToken();
+      this.getUser();
     }
   },
   methods: {
-    ...mapMutations('user', ['getAccessToken'])
+    ...mapMutations('user', ['getAccessToken', 'getUser']),
+    ...mapActions('user', ['logoutUser']),
+    logout() {
+      this.logoutUser();
+      this.$router.push('/login');
+    }
   },
 };
 </script>
